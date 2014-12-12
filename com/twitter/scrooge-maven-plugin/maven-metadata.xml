@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.twitter</groupId>
+  <artifactId>scrooge-maven-plugin</artifactId>
+  <versioning>
+    <latest>3.17.0-TellApart</latest>
+    <release>3.17.0-TellApart</release>
+    <versions>
+      <version>3.17.0-TellApart</version>
+    </versions>
+    <lastUpdated>20141212064939</lastUpdated>
+  </versioning>
+</metadata>

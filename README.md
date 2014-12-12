@@ -37,3 +37,31 @@ SBT users need this:
 ## Full Documentation
 
 <https://twitter.github.io/scrooge/>
+
+## To Deploy to the Maven repo
+
+Make a settings file in ~/.m2/settings.xml
+
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>github</id>
+      <username>YOUR-USERNAME</username>
+      <password>YOUR-PASSWORD</password>
+    </server>
+  </servers>
+</settings>
+```
+Then do the following to change the read permissions for that settings file.
+
+```bash
+chmod 700 ~/.m2/settings.xml
+```
+
+To actually deploy the newest snapshot to the mvn-repo branch, run the following commands.
+```bash
+sbt publish-m2
+cd scrooge-maven-plugin
+mvn clean deploy site
+```

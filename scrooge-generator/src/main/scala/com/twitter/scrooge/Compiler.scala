@@ -59,7 +59,8 @@ class Compiler {
 
     val isJava = language.equals("java")
     val isScala = language.equals("scala")
-    val rhsStructs = isJava || isScala
+    val isExperimentalJava =  language.equals("experiment-java")
+    val rhsStructs = isJava || isScala || isExperimentalJava
     val documentCache = new TrieMap[String, Document]
 
     // compile

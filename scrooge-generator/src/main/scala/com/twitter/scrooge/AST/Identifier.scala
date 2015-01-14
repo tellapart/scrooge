@@ -1,6 +1,7 @@
 package com.twitter.scrooge.ast
 
 import scala.collection.mutable
+
 import com.twitter.scrooge.frontend.ScroogeInternalException
 
 sealed abstract class Identifier extends IdNode {
@@ -55,17 +56,29 @@ object Identifier {
    *     (_genHtmlReport, _genHtmlReport, _GenHtmlReport)
    */
   def toCamelCase(str: String, firstCharUp: Boolean = false): String = {
-//    str.takeWhile(_ == '_') + str.
-//      split('_').
-//      filterNot(_.isEmpty).
-//      zipWithIndex.map { case (part, ind) =>
-//        val first = if (ind == 0 && !firstCharUp) part(0).toLower else part(0).toUpper
-//        val isAllUpperCase = part.forall { c => c.isUpper || !c.isLetter }
-//        val rest = if (isAllUpperCase) part.drop(1).toLowerCase else part.drop(1)
-//        new mutable.StringBuilder(part.size).append(first).append(rest)
-//      }.
-//      mkString
-    str
+    str.takeWhile(_ == '_') + str.
+      split('_').
+      filterNot(_.isEmpty).
+      zipWithIndex.map { case (part, ind) =>
+        val isAllUpperCase = part.forall { c => c.isUpper || !c.isLetter }
+        val isAllLowerCase = part.forall { c => c.isLower || !c.isLetter }
+        val isPartialCamelCase = !isAllUpperCase && !isAllLowerCase
+        val first =
+          if (firstCharUp) {
+            part(0).toUpper
+          }
+          else if (isPartialCamelCase) {
+            part(0)
+          }
+          else if (ind == 0 && !isAllUpperCase) {
+            part(0).toLower
+          } else {
+            part(0).toUpper
+          }
+        val rest = part.drop(1)
+        new mutable.StringBuilder(part.size).append(first).append(rest)
+      }.
+      mkString
   }
 }
 

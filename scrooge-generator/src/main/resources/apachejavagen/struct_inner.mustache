@@ -143,6 +143,9 @@ public {{#is_final}}final {{/is_final}}{{#in_class}}static {{/in_class}}class {{
   {{#field_type.is_binary}}
   public byte[] get{{#cap}}{{name}}{{/cap}}() {
     set{{#cap}}{{name}}{{/cap}}(TBaseHelper.rightSize({{name}}));
+    if ({{name}} == null) {
+      return null;
+    }
     return {{name}}.array();
   }
 

@@ -9,7 +9,7 @@ import sbtassembly.Plugin._
 import AssemblyKeys._
 
 object Scrooge extends Build {
-  val libVersion = "3.17.1-TellApart"
+  val libVersion = "3.17.2-TellApart"
   val utilVersion = "6.22.2"
   val finagleVersion = "6.22.0"
 
@@ -179,7 +179,7 @@ object Scrooge extends Build {
     libraryDependencies ++= Seq(
       util("core") exclude("org.mockito", "mockito-all"),
       util("codec") exclude("org.mockito", "mockito-all"),
-      "org.apache.thrift" % "libthrift" % "0.8.0",
+      "org.apache.thrift" % "libthrift" % "0.9.1",
       "com.github.scopt" %% "scopt" % "3.2.0",
       "com.novocode" % "junit-interface" % "0.8" % "test->default" exclude("org.mockito", "mockito-all"),
       "com.github.spullara.mustache.java" % "compiler" % "0.8.12",
@@ -201,7 +201,7 @@ object Scrooge extends Build {
   ).settings(
     name := "scrooge-core",
     libraryDependencies ++= Seq(
-      "org.apache.thrift" % "libthrift" % "0.8.0" % "provided"
+      "org.apache.thrift" % "libthrift" % "0.9.1" % "provided"
     ),
     crossScalaVersions += "2.11.2"
   )
@@ -241,7 +241,7 @@ object Scrooge extends Build {
     name := "scrooge-serializer",
     libraryDependencies ++= Seq(
       util("codec"),
-      "org.apache.thrift" % "libthrift" % "0.8.0" % "provided"
+      "org.apache.thrift" % "libthrift" % "0.9.1" % "provided"
     ),
     crossScalaVersions += "2.11.2"
   ).dependsOn(scroogeCore)

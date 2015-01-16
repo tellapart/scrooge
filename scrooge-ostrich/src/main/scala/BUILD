@@ -5,7 +5,7 @@ scala_library(name='scala',
     repo = artifactory,
   ),
   dependencies=[
-    '3rdparty:libthrift-0.5.0',
+    '3rdparty:libthrift-0.9.1',
     'finagle/finagle-core',
     'finagle/finagle-ostrich4',
     'finagle/finagle-thrift',

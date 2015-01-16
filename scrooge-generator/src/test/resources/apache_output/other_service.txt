@@ -54,13 +54,14 @@ public class OtherService {
 
   }
 
-  public static class Client extends com.twitter.thrift.TestServiceParent.Client implements TServiceClient, Iface {
+  public static class Client extends com.twitter.thrift.TestServiceParent.Client extends TServiceClient, Iface {
     public static class Factory implements TServiceClientFactory<Client> {
       public Factory() {}
       public Client getClient(TProtocol prot) {
         return new Client(prot);
       }
       public Client getClient(TProtocol iprot, TProtocol oprot) {
+        super(iprot, oprot);
         return new Client(iprot, oprot);
       }
     }

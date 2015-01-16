@@ -146,7 +146,7 @@ public {{#is_final}}final {{/is_final}}{{#in_class}}static {{/in_class}}class {{
     return {{name}}.array();
   }
 
-  public ByteBuffer BufferFor{{#cap}}{{name}}{{/cap}}() {
+  public ByteBuffer bufferFor{{#cap}}{{name}}{{/cap}}() {
     return {{name}};
   }
 

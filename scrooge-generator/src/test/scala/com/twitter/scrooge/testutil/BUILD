@@ -2,7 +2,7 @@ scala_library(name='testutil',
   dependencies=[
     '3rdparty:jmock',
     '3rdparty:junit',
-    '3rdparty:libthrift-0.5.0',
+    '3rdparty:libthrift-0.9.1',
     '3rdparty:mockito-all',
     '3rdparty:scalatest',
     'finagle/finagle-thrift',

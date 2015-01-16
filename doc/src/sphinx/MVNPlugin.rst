@@ -9,7 +9,7 @@ need to be declared.
     <dependency>
       <groupId>org.apache.thrift</groupId>
       <artifactId>libthrift</artifactId>
-      <version>0.8.0</version>
+      <version>0.9.1</version>
     </dependency>
     <dependency>
       <groupId>com.twitter</groupId>

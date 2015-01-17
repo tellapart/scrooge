@@ -163,7 +163,7 @@ public {{#is_final}}final {{/is_final}}{{#in_class}}static {{/in_class}}class {{
   {{#field_type.is_binary}}
   public {{struct_type_name}} set{{#cap}}{{name}}{{/cap}}(byte[] {{name}}) {
     if ({{name}} == null) {
-      set{{#cap}}{{name}}{{/cap}}(null);
+      this.{{name}} = null;
     }
     else {
       set{{#cap}}{{name}}{{/cap}}(ByteBuffer.wrap({{name}}));

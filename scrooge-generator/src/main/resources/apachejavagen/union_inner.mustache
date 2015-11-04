@@ -44,7 +44,7 @@ public {{#is_final}}final {{/is_final}}{{#in_class}}static {{/in_class}}class {{
   }
 
   @Override
-  protected Object readValue(TProtocol iprot, TField field) throws TException {
+  protected Object standardSchemeReadValue(TProtocol iprot, TField field) throws TException {
     _Fields setField = _Fields.findByThriftId(field.id);
     if (setField != null) {
       switch (setField) {
@@ -69,7 +69,40 @@ public {{#is_final}}final {{/is_final}}{{#in_class}}static {{/in_class}}class {{
   }
 
   @Override
-  protected void writeValue(TProtocol oprot) throws TException {
+  protected void standardSchemeWriteValue(TProtocol oprot) throws TException {
+    switch (setField_) {
+      {{#fields}}
+      case {{#constant_name}}{{name}}{{/constant_name}}:
+        {{{field_type.type_name_in_container}}} {{name}} = ({{{field_type.type_name_in_container}}})value_;
+        {{{serialize_field}}}
+        return;
+      {{/fields}}
+      default:
+        throw new IllegalStateException("Cannot write union with unknown field " + setField_);
+    }
+  }
+
+  @Override
+  protected Object tupleSchemeReadValue(TProtocol iprot, short fieldID) throws org.apache.thrift.TException {
+    _Fields setField = _Fields.findByThriftId(fieldID);
+    if (setField != null) {
+      switch (setField) {
+        {{#fields}}
+        case {{#constant_name}}{{name}}{{/constant_name}}:
+          {{{field_type.type_name_in_container}}} {{name}};
+          {{{deserialize_field}}}
+          return {{name}};
+        {{/fields}}
+        default:
+          throw new IllegalStateException("setField wasn't null, but didn't match any of the case statements!");
+      }
+    } else {
+      throw new TProtocolException("Couldn't find a field with field id " + fieldID);
+    }
+  }
+
+  @Override
+  protected void tupleSchemeWriteValue(TProtocol oprot) throws org.apache.thrift.TException {
     switch (setField_) {
       {{#fields}}
       case {{#constant_name}}{{name}}{{/constant_name}}:

@@ -9,7 +9,7 @@ import sbtassembly.Plugin._
 import AssemblyKeys._
 
 object Scrooge extends Build {
-  val libVersion = "3.17.2-TellApart"
+  val libVersion = "3.17.3-TellApart"
   val utilVersion = "6.22.2"
   val finagleVersion = "6.22.0"
 

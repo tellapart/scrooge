@@ -130,7 +130,7 @@ case class TypeResolver(
         ResolvedDefinition(
           resolved,
           withMapping(sid.name, StructType(resolved, scopePrefix)))
-      case e @ Exception_(sid, _, fs, _) =>
+      case e @ Exception_(sid, _, fs, _, _) =>
         val resolved = e.copy(fields = fs.map(apply))
         ResolvedDefinition(
           resolved,
@@ -142,7 +142,7 @@ case class TypeResolver(
       case s @ Service(sid, p, fs, _) =>
         val resolved = s.copy(parent = p.map(apply), functions = fs.map(apply))
         ResolvedDefinition(resolved, withMapping(resolved))
-      case e @ Enum(sid, _, _) =>
+      case e @ Enum(sid, _, _, _) =>
         ResolvedDefinition(e, withMapping(sid.name, EnumType(e, scopePrefix)))
       case s @ Senum(sid, _) =>
         ResolvedDefinition(s, withMapping(sid.name, TString))

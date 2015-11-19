@@ -17,7 +17,8 @@ case class Typedef(sid: SimpleID, fieldType: FieldType, annotations: Map[String,
 case class Enum(
   sid: SimpleID,
   values: Seq[EnumField],
-  docstring: Option[String]
+  docstring: Option[String],
+  annotations: Map[String, String] = Map.empty
 ) extends Definition
 
 case class EnumField(sid: SimpleID, value: Int, docstring: Option[String]) extends Definition
@@ -67,10 +68,9 @@ case class Exception_(
   sid: SimpleID,
   originalName: String,
   fields: Seq[Field],
-  docstring: Option[String]
-) extends StructLike {
-  override val annotations: Map[String, String] = Map.empty
-}
+  docstring: Option[String],
+  annotations: Map[String, String] = Map.empty
+) extends StructLike
 
 
 case class Service(

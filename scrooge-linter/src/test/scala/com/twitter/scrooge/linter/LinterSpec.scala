@@ -47,7 +47,7 @@ class LinterSpec extends WordSpec with MustMatchers {
     "fail Namespaces" in {
       val errors = LintRule.Namespaces(Document(Seq(Namespace("java", SimpleID("asdf"))), Nil)).toSeq
       errors.length must be(1)
-      assert(errors(0).msg contains("Missing namespace"))
+      assert(errors.head.msg contains("Missing namespace"))
     }
 
     "pass RelativeIncludes" in {
@@ -68,7 +68,7 @@ class LinterSpec extends WordSpec with MustMatchers {
           Include("./dir1/../dir1/include1.thrift", Document(Seq(), Seq()))),
         Nil)).toSeq
       errors.size must be(1)
-      assert(errors(0).msg contains("Relative include path found"))
+      assert(errors.head.msg contains("Relative include path found"))
     }
 
     "pass CamelCase" in {
@@ -98,7 +98,46 @@ class LinterSpec extends WordSpec with MustMatchers {
             TString)),
           None)))).toSeq
       errors.length must be(1)
-      assert(errors(0).msg contains("lowerCamelCase"))
+      assert(errors.head.msg contains("lowerCamelCase"))
+    }
+
+    "fail TransitivePersistence" in {
+      val errors = LintRule.TransitivePersistence(
+        Document(
+          Seq(),
+          Seq(
+            struct(
+              "SomeType",
+              Map(
+                "foo" -> TString,
+                "bar" -> StructType(struct("SomeOtherType", Map.empty))
+              ),
+              persisted = true
+            )
+          )
+        )).toSeq
+      errors.length must be(1)
+      val error = errors.head.msg
+      assert(error.contains("persisted"))
+      assert(error.contains("SomeType"))
+      assert(error.contains("SomeOtherType"))
+    }
+
+    "pass TransitivePersistence" in {
+      mustPass(LintRule.TransitivePersistence(
+        Document(
+          Seq(),
+          Seq(
+            struct(
+              "SomeType",
+              Map(
+                "foo" -> TString,
+                "bar" -> StructType(struct("SomeOtherType", Map.empty, true))
+              ),
+              true
+            )
+          )
+        )))
     }
 
     "pass RequiredFieldDefault" in {
@@ -192,4 +231,23 @@ class LinterSpec extends WordSpec with MustMatchers {
         assert(errors(0).msg contains("Avoid using keywords"))
     }
   }
+
+  private[this] def struct(name: String, fields: Map[String, FieldType], persisted: Boolean = false) =
+    Struct(
+      SimpleID(name),
+      name,
+      fields.zipWithIndex.map {
+                                case ((fieldName, fieldType), i) => Field(i, SimpleID(fieldName), fieldName, fieldType)
+                              }.toSeq,
+      None,
+      if (persisted) Map("persisted" -> "true") else Map.empty
+    )
+
+  private[this] def enum(name: String, values: Seq[EnumField], persisted: Boolean = false) =
+    Enum(
+      SimpleID(name),
+      values,
+      None,
+      if (persisted) Map("persisted" -> "true") else Map.empty
+    )
 }

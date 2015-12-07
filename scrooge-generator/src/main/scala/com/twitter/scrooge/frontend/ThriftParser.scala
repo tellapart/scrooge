@@ -16,6 +16,7 @@
 
 package com.twitter.scrooge.frontend
 
+import com.twitter.logging.Logger
 import com.twitter.scrooge.ast._
 import java.io.FileNotFoundException
 import scala.collection.concurrent.{Map, TrieMap}
@@ -31,7 +32,7 @@ class ThriftParser(
   defaultOptional: Boolean = false,
   skipIncludes: Boolean = false,
   documentCache: Map[String, Document] = new TrieMap[String, Document]
-) extends RegexParsers {
+)(implicit val logger:Logger = Logger()) extends RegexParsers {
 
 
   //                            1    2        3                   4         4a    4b 4c       4d
@@ -309,8 +310,8 @@ class ThriftParser(
   }
 
   lazy val enum = (opt(comments) ~ (("enum" ~> simpleID) <~ "{")) ~ rep(opt(comments) ~ simpleID ~ opt("=" ~> intConstant) <~
-    opt(listSeparator)) <~ "}" ^^ {
-    case comment ~ sid ~ items =>
+    opt(listSeparator)) ~ ("}" ~> defaultedAnnotations) ^^ {
+    case comment ~ sid ~ items ~ annotation  =>
       var failed: Option[Int] = None
       val seen = new mutable.HashSet[Int]
       var nextValue = 0
@@ -328,7 +329,7 @@ class ThriftParser(
       if (failed.isDefined) {
         throw new RepeatingEnumValueException(sid.name, failed.get)
       } else {
-        Enum(sid, values.toList, comment)
+        Enum(sid, values.toList, comment, annotation)
       }
   }
 
@@ -364,8 +365,10 @@ class ThriftParser(
       Union(sid, sid.name, fixFieldIds(fields0), comment, annotations)
   }
 
-  lazy val exception = (opt(comments) ~ ("exception" ~> simpleID <~ "{")) ~ opt(rep(field)) <~ "}" ^^ {
-    case comment ~ sid ~ fields => Exception_(sid, sid.name, fixFieldIds(fields.getOrElse(Nil)), comment)
+  lazy val exception = (opt(comments) ~ ("exception" ~> simpleID <~ "{")) ~ opt(rep(field)) ~
+    ("}" ~> defaultedAnnotations) ^^ {
+    case comment ~ sid ~ fields ~ annotations =>
+        Exception_(sid, sid.name, fixFieldIds(fields.getOrElse(Nil)), comment, annotations)
   }
 
   lazy val service = (opt(comments) ~ ("service" ~> simpleID)) ~ opt("extends" ~> serviceParentID) ~ ("{" ~> rep(function) <~
@@ -481,6 +484,6 @@ class ThriftParser(
     if (strict)
       throw ex
     else
-      println("Warning: " + ex.getMessage)
+      logger.warning(ex.getMessage)
   }
 }
